@@ -30,7 +30,7 @@ public class MyStepdefs {
     WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(TIMEOUT));
 
     @Дано("открыт стенд по адресу локалхост")
-    public void открыт_стенд_по_адресу() {
+    public void openStand() {
         driver.get("http://localhost:8080/");
     }
 
@@ -52,11 +52,26 @@ public class MyStepdefs {
         buttonAdd.click();
     }
 
-    @И("Пользователь вводит наименование {string}")
-    public void typeName(String str) {
+    @И("Пользователь вводит наименование фрукта")
+    public void typeNameFruit() {
         WebElement inputName = driver.findElement(By.id("name"));
         wait.until(ExpectedConditions.elementToBeClickable(inputName));
         inputName.sendKeys(Data.fruit);
+    }
+
+    @И("Пользователь вводит наименование овоща")
+    public void typeNameVegetable() {
+        WebElement inputName = driver.findElement(By.id("name"));
+        wait.until(ExpectedConditions.elementToBeClickable(inputName));
+        inputName.sendKeys(Data.vegetable);
+    }
+
+    @И("Пользователь выбирает в выпадающем списке тип Овощ")
+    public void clickDropdownTypeVegetable() {
+        WebElement dropdownType = driver.findElement(By.id("type"));
+        dropdownType.click();
+        WebElement dropdownPointVegetableType = driver.findElement(By.xpath("//option[@value='VEGETABLE']"));
+        dropdownPointVegetableType.click();
     }
 
     @И("Пользователь выбирает в выпадающем списке тип Фрукт")
@@ -79,18 +94,17 @@ public class MyStepdefs {
         buttonSave.click();
     }
 
-
-    @Тогда("Проверяем, что в последней строке таблицы Товары отображаются введенные данные")
-    public void assertResult() {
+    @Тогда("Проверяем, что в последней строке таблицы Товары отображаются введенные данные фрукта")
+    public void assertResultFruit() {
 
 
         List<String> listWithFruitCyrillicAndLatinSymbols = Arrays.asList(
                 "5", "ЭкЗоТиЧеСкИй FrUiT!", "Фрукт", "true");
 
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[5]")));
+
         List<WebElement> lastRowInTableOfFoods = driver.findElements(By.xpath(
                 "//tr[5]/*"));
-
-        wait.until(ExpectedConditions.elementToBeClickable(lastRowInTableOfFoods.get(0)));
 
         List<String> lastRowInTableOfFoodsStr = new ArrayList<>();
 
@@ -100,6 +114,30 @@ public class MyStepdefs {
 
         Assertions.assertEquals(
                 listWithFruitCyrillicAndLatinSymbols,
+                lastRowInTableOfFoodsStr,
+                "Не совпадают элементы в таблице товаров");
+    }
+
+    @Тогда("Проверяем, что в последней строке таблицы Товары отображаются введенные данные овоща")
+    public void assertResultVegetable() {
+
+
+        List<String> listWithVegetableSpecialCharacters = Arrays.asList(
+                "5", "`!@#$%^&*()_+?/~.♣☺♂{code};–<>", "Овощ", "false");
+
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//tr[5]")));
+
+        List<WebElement> lastRowInTableOfFoods = driver.findElements(By.xpath(
+                "//tr[5]/*"));
+
+        List<String> lastRowInTableOfFoodsStr = new ArrayList<>();
+
+        for (WebElement element : lastRowInTableOfFoods) {
+            lastRowInTableOfFoodsStr.add(element.getText());
+        }
+
+        Assertions.assertEquals(
+                listWithVegetableSpecialCharacters,
                 lastRowInTableOfFoodsStr,
                 "Не совпадают элементы в таблице товаров");
     }

@@ -8,9 +8,10 @@ import static io.cucumber.core.options.Constants.*;
 @IncludeEngines("cucumber")
 @SelectClasspathResource("features")
 @ConfigurationParameters({
-@ConfigurationParameter(key = FEATURES_PROPERTY_NAME, value = "src/test/resources/features/"),
-@ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "org.example"),
-@ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm")
+        @ConfigurationParameter(key = FILTER_TAGS_PROPERTY_NAME, value = "@all"),
+        @ConfigurationParameter(key = FEATURES_PROPERTY_NAME, value = "src/test/resources/features/"),
+        @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "qualITCucumber"),
+        @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm")
 })
 public class TestRunner {
 }
